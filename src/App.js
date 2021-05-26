@@ -15,15 +15,12 @@ export default function App() {
 				>
 					<StatusBar style={styles.statusBar} />
 					<Logo />
-					<Text style={styles.text}>react-native-test</Text>
+					<Text style={styles.text}>React Native</Text>
 				</LinearGradient>
 			</ImageBackground>
 		</View>
 	);
 }
-
-// backgroundColor: 'rgb(2,0,36)',
-// backgroundColor: 'linear-gradient(130deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 40%, rgba(0,212,255,1) 100%)',
 
 const styles = StyleSheet.create({
 	container: {
@@ -40,12 +37,12 @@ const styles = StyleSheet.create({
 	linearGradient: {
 		width: '100%',
 		height: '100%',
-		opacity: 0.95,
+		opacity: 0.9, // 0.95
 		justifyContent: 'center',
 		alignItems: 'center'
 	},
 	text: {
-		color: '#fff',
+		color: 'white',
 		fontSize: 40,
 		fontWeight: 'bold',
 		textAlign: 'center'
