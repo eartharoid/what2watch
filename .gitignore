@@ -53,5 +53,5 @@ buck-out/
 .expo/
 web-build/
 
-android
-ios
+android/
+ios/
