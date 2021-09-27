@@ -1,0 +1,15 @@
+{
+	"name": "What2Watch",
+	"short_name": "❔2️⃣⌚",
+	"start_url": "/index.html",
+	"display": "standalone",
+	"background_color": "#000",
+	"description": "Find a movie to watch.",
+	"icons": [
+		{
+			"src": "/images/icons/icon-128x128.png",
+			"sizes": "128x128",
+			"type": "image/png"
+		}
+	]
+}

@@ -1,0 +1,17 @@
+{
+	"hosting": {
+		"site": "what2watch-app",
+		"public": "public",
+		"ignore": [
+			"firebase.json",
+			"**/.*",
+			"**/node_modules/**"
+		],
+		"rewrites": [
+			{
+				"source": "**",
+				"destination": "/index.html"
+			}
+		]
+	}
+}
