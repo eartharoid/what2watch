@@ -8,7 +8,7 @@
 		"build": "npm run build:tailwind && rollup -c",
 		"start": "sirv public",
 		"serve": "serve public -p 80",
-		"dev": "concurrently \"rollup -c -w\" \"npm run watch:tailwind\"",
+		"dev": "concurrently \"rollup -c -w\" \"npm run watch:tailwind\" \"firebase emulators:start --only database,functions\"",
 		"lint": "eslint src --ext .js,.json,.svelte --fix"
 	},
 	"devDependencies": {
@@ -31,6 +31,8 @@
 	},
 	"dependencies": {
 		"firebase": "^9.1.0",
+		"firebase-admin": "^9.12.0",
+		"firebase-functions": "^3.15.7",
 		"firebaseui": "^5.0.0",
 		"sirv-cli": "^1.0.0",
 		"svelte-routing": "^1.6.0"

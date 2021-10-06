@@ -1,9 +1,10 @@
 <script>
 	import { Router, Link, Route } from "svelte-routing";
 	import Home from "./routes/Home.svelte";
+	import Login from "./routes/Login.svelte";
 	import { initializeApp } from "firebase/app";
 
-	const app = initializeApp({
+	const firebase = initializeApp({
 		apiKey: "AIzaSyBiIDRNDjp-D0N9N-tFhCOJliMvJHvPNcg",
 		authDomain: "what2watch-app.firebaseapp.com",
 		databaseURL:
@@ -18,7 +19,7 @@
 </script>
 
 <main
-	class="p-5 fixed h-full w-full  bg-cover bg-gradient-to-br from-green-600 to-blue-800 text-white"
+	class="p-5 fixed h-full w-full bg-cover bg-gradient-to-br from-green-600 to-blue-800 text-white"
 >
 	<Router {url}>
 		<!-- <nav>

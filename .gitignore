@@ -1,6 +1,7 @@
-/node_modules/
+node_modules
 /public/build/
 /.firebase/
 
 .DS_Store
 public/global.css
+*.log
