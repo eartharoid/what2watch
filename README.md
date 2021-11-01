@@ -2,4 +2,10 @@
 
 A PWA powered by svlete, created for my A level Computer Science NEA project.
 
-> Data provided by TheMovieDB and JustWatch.
+# Credits
+
+Data provided by TheMovieDB and JustWatch.
+
+# Notes
+
+- could use firebase rtdb and/or functions but node.js server is easier to develop

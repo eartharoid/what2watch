@@ -1,13 +1,11 @@
 module.exports = {
 	'env': {
-		es6: true,
-		node: true
+		'commonjs': true,
+		'es2021': true,
+		'node': true
 	},
-	'extends': [
-		'eslint:recommended'
-		// "google",
-	],
-	'root': true,
+	'extends': 'eslint:recommended',
+	'parserOptions': { 'ecmaVersion': 12 },
 	'rules': {
 		'array-bracket-newline': [
 			'error',
@@ -112,7 +110,7 @@ module.exports = {
 			'warn'
 		],
 		'no-console': [
-			'warn'
+			'off'
 		],
 		'no-return-assign': [
 			'error'
