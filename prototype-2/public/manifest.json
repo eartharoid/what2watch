@@ -1,7 +1,7 @@
 {
 	"name": "What2Watch",
 	"short_name": "❔2️⃣⌚",
-	"start_url": "/index.html",
+	"start_url": "/",
 	"display": "standalone",
 	"background_color": "#000",
 	"description": "Find a movie to watch.",

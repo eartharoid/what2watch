@@ -4,6 +4,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import css from 'rollup-plugin-css-only';
+import replace from '@rollup/plugin-replace';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -18,8 +19,8 @@ function serve() {
 		writeBundle() {
 			if (server) return;
 			server = require('child_process').spawn('npm', ['run', 'start', '--', '--dev'], {
-				stdio: ['ignore', 'inherit', 'inherit'],
-				shell: true
+				shell: true,
+				stdio: ['ignore', 'inherit', 'inherit']
 			});
 
 			process.on('SIGTERM', toExit);
@@ -31,10 +32,10 @@ function serve() {
 export default {
 	input: 'src/main.js',
 	output: {
-		sourcemap: true,
+		file: 'public/build/bundle.js',
 		format: 'iife',
 		name: 'app',
-		file: 'public/build/bundle.js'
+		sourcemap: true
 	},
 	plugins: [
 		svelte({
@@ -43,6 +44,9 @@ export default {
 				dev: !production
 			}
 		}),
+
+		replace({ process: JSON.stringify({ env: { SOCKET: production ? 'https://ws.what2watch.eartharoid.me' : 'http://localhost:8080' } }) }),
+
 		/*
 		 * we'll extract any component CSS out into
 		 * a separate file - better for performance

@@ -5,10 +5,11 @@ module.exports = {
 		removeDeprecatedGapUtilities: true
 	},
 	plugins: [
+		require('@tailwindcss/forms')
 	],
 	purge: {
 		content: [
-			'./src/App.svelte'
+			'./src/**/*.svelte'
 		],
 		enabled: production // disable purge in dev
 	}

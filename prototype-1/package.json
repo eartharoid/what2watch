@@ -1,0 +1,20 @@
+{
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "inquirer": "^8.2.0",
+    "iso-3166-1": "^2.1.1",
+    "moviedb-promise": "^3.1.13"
+  },
+  "devDependencies": {
+    "eslint": "^8.9.0"
+  },
+  "name": "prototype-1",
+  "version": "0.0.1",
+  "main": "src",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "description": ""
+}
