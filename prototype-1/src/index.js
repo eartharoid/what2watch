@@ -48,15 +48,12 @@ inquirer
 		console.log('Genre IDs:', genresToExclude.join(', ') || 'none'); // dev: verify that the above worked by outputting genre IDs
 
 		try {
-			const params = {
-				sort_by: 'popularity.desc', // get the most popular
-				watch_region: region, // only include movies streamable in the user's region
-				without_genres: genresToExclude.join(',') // only include movies without these genres 
-			};
-			if (!services.includes(-1)) params.with_watch_providers = services.join(','); // if services doesn't include buying/renting, add services to query
-			let { results } = await tmdb.discoverMovie(params); // fetch movies from TMDB API using query params
-			console.log(results[0])
-			results.forEach(movie => console.log(movie.title));
+			const store = {};
+			main(store, {
+				genresToExclude,
+				region,
+				services
+			});
 		} catch (error) {
 			console.log('Fatal error:', error);
 		}
@@ -69,3 +66,37 @@ inquirer
 			console.error('Error:', error);
 		}
 	});
+
+async function main(store, {
+	genresToExclude,
+	region,
+	services
+}) {
+	console.time('tdmb-api');
+	console.log('Processing...');
+	const params = {
+		sort_by: 'popularity.desc', // get the most popular
+		watch_region: region, // only include movies streamable in the user's region
+		without_genres: genresToExclude.join(',') // only include movies without these genres
+	};
+	if (!services.includes(-1)) params.with_watch_providers = services.join(','); // if services doesn't include buying/renting, add services to query
+	const results = (await tmdb.discoverMovie(params)).results.splice(0, 10); // fetch movies from TMDB API using query params, limit to 10 results max
+
+	const cast = {};
+	for (const result of results) cast[result.id] = (await tmdb.movieCredits({ id: result.id })).cast.splice(0, 25); // fetch credits for each movie, limit to 25
+
+	const keywords = {};
+	for (const result of results) keywords[result.id] = await tmdb.movieKeywords({ id: result.id }); // fetch credits for each movie
+
+	console.timeEnd('tdmb-api');
+
+	console.log(results[0].title);
+	console.log(keywords[results[0].id]);
+	// results.forEach(movie => console.log(movie.title));
+
+	inquirer.prompt(results.map(result => ({
+		message: `Do you want to watch "${result.title}", starring ${cast[result.id][0]?.name} and ${cast[result.id][1]?.name}?`,
+		name: result.id,
+		type: 'confirm'
+	})));
+}
