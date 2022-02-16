@@ -36,7 +36,7 @@ inquirer
 			type: 'checkbox'
 		}
 	])
-	.then(async ({
+	.then(({
 		genresToExclude,
 		region,
 		services
@@ -48,7 +48,11 @@ inquirer
 		console.log('Genre IDs:', genresToExclude.join(', ') || 'none'); // dev: verify that the above worked by outputting genre IDs
 
 		try {
-			const store = {};
+			const store = {
+				cast: {},
+				genres: {},
+				keywords: {}
+			};
 			main(store, {
 				genresToExclude,
 				region,
@@ -67,6 +71,22 @@ inquirer
 		}
 	});
 
+
+async function voteCast(store, id, vote) {
+	if (store.cast[id] === undefined) store.cast[id] = vote ? 1 : -1; // if it doesn't exist yet, set it to +1 or -1
+	else store.cast[id] = vote ? store.cast[id]++ : store.cast[id]--; // add or subtract 1
+}
+
+async function voteGenre(store, id, vote) {
+	if (store.genres[id] === undefined) store.genres[id] = vote ? 1 : -1;
+	else store.genres[id] = vote ? store.genres[id]++ : store.genres[id]--;
+}
+
+async function voteKeyword(store, id, vote) {
+	if (store.keywords[id] === undefined) store.keywords[id] = vote ? 1 : -1;
+	else store.keywords[id] = vote ? store.keywords[id]++ : store.keywords[id]--;
+}
+
 async function main(store, {
 	genresToExclude,
 	region,
@@ -74,6 +94,7 @@ async function main(store, {
 }) {
 	console.time('tdmb-api');
 	console.log('Processing...');
+
 	const params = {
 		sort_by: 'popularity.desc', // get the most popular
 		watch_region: region, // only include movies streamable in the user's region
@@ -86,17 +107,21 @@ async function main(store, {
 	for (const result of results) cast[result.id] = (await tmdb.movieCredits({ id: result.id })).cast.splice(0, 25); // fetch credits for each movie, limit to 25
 
 	const keywords = {};
-	for (const result of results) keywords[result.id] = await tmdb.movieKeywords({ id: result.id }); // fetch credits for each movie
+	for (const result of results) keywords[result.id] = (await tmdb.movieKeywords({ id: result.id })).keywords; // fetch credits for each movie
 
 	console.timeEnd('tdmb-api');
 
-	console.log(results[0].title);
-	console.log(keywords[results[0].id]);
-	// results.forEach(movie => console.log(movie.title));
-
-	inquirer.prompt(results.map(result => ({
-		message: `Do you want to watch "${result.title}", starring ${cast[result.id][0]?.name} and ${cast[result.id][1]?.name}?`,
-		name: result.id,
-		type: 'confirm'
-	})));
+	inquirer
+		.prompt(results.map(result => ({
+			message: `Do you want to watch "${result.title}", starring ${cast[result.id][0]?.name} and ${cast[result.id][1]?.name}?`,
+			name: result.id,
+			type: 'confirm'
+		})))
+		.then(answers => {
+			for (const movieId in answers) { // loop through each movie
+				for (const { id } of cast[movieId]) voteCast(store, id, answers[movieId]); // update each actor
+				if (genresToExclude.length !== 1) for (const id of results.find(result => result.id === Number(movieId)).genre_ids) voteGenre(store, id, answers[movieId]); // update each genre
+				for (const { id } of keywords[movieId]) voteKeyword(store, id, answers[movieId]); // update each keyword
+			}
+		});
 }
