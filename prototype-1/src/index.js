@@ -13,6 +13,8 @@ const serviceIDs = {
 	'Netflix': 8
 };
 
+let store;
+
 inquirer
 	.prompt([
 		{
@@ -45,15 +47,17 @@ inquirer
 		services = services.map(name => serviceIDs[name]); // convert service names to IDs
 		console.log('The following genres will be excluded from recommendations:', genresToExclude.join(', ') || 'none'); // output excluded genre names
 		genresToExclude = genresToExclude.map(name => genres.find(genre => genre.name === name).id); // convert genre names to IDs
-		console.log('Genre IDs:', genresToExclude.join(', ') || 'none'); // dev: verify that the above worked by outputting genre IDs
+		// console.log('Genre IDs:', genresToExclude.join(', ') || 'none'); // dev: verify that the above worked by outputting genre IDs
 
 		try {
-			const store = {
+			store = {
 				cast: {},
+				data: {},
 				genres: {},
-				keywords: {}
+				keywords: {},
+				movies: {}
 			};
-			main(store, {
+			main({
 				genresToExclude,
 				region,
 				services
@@ -72,56 +76,153 @@ inquirer
 	});
 
 
-async function voteCast(store, id, vote) {
+function voteCast(id, vote) {
 	if (store.cast[id] === undefined) store.cast[id] = vote ? 1 : -1; // if it doesn't exist yet, set it to +1 or -1
-	else store.cast[id] = vote ? store.cast[id]++ : store.cast[id]--; // add or subtract 1
+	else vote ? store.cast[id]++ : store.cast[id]--; // add or subtract 1
 }
 
-async function voteGenre(store, id, vote) {
+function voteGenre(id, vote) {
 	if (store.genres[id] === undefined) store.genres[id] = vote ? 1 : -1;
-	else store.genres[id] = vote ? store.genres[id]++ : store.genres[id]--;
+	else vote ? store.genres[id]++ : store.genres[id]--;
 }
 
-async function voteKeyword(store, id, vote) {
+function voteKeyword(id, vote) {
 	if (store.keywords[id] === undefined) store.keywords[id] = vote ? 1 : -1;
-	else store.keywords[id] = vote ? store.keywords[id]++ : store.keywords[id]--;
+	else vote ? store.keywords[id]++ : store.keywords[id]--;
 }
 
-async function main(store, {
+async function ask(movies, {
 	genresToExclude,
 	region,
 	services
 }) {
-	console.time('tdmb-api');
-	console.log('Processing...');
+	for (const result of movies) {
+		if (store.data[String(result.id)]._cast === undefined) {
+			store.data[String(result.id)]._cast = (await tmdb.movieCredits({ id: result.id })).cast.splice(0, 25);
+		}
+	} // fetch credits for each movie, limit to 25
 
-	const params = {
-		sort_by: 'popularity.desc', // get the most popular
-		watch_region: region, // only include movies streamable in the user's region
-		without_genres: genresToExclude.join(',') // only include movies without these genres
-	};
-	if (!services.includes(-1)) params.with_watch_providers = services.join(','); // if services doesn't include buying/renting, add services to query
-	const results = (await tmdb.discoverMovie(params)).results.splice(0, 10); // fetch movies from TMDB API using query params, limit to 10 results max
-
-	const cast = {};
-	for (const result of results) cast[result.id] = (await tmdb.movieCredits({ id: result.id })).cast.splice(0, 25); // fetch credits for each movie, limit to 25
-
-	const keywords = {};
-	for (const result of results) keywords[result.id] = (await tmdb.movieKeywords({ id: result.id })).keywords; // fetch credits for each movie
-
-	console.timeEnd('tdmb-api');
+	for (const result of movies) {
+		if (store.data[String(result.id)]._keywords === undefined) {
+			store.data[String(result.id)]._keywords = (await tmdb.movieKeywords({ id: result.id })).keywords;
+		}
+	} // fetch keywords for each movie
 
 	inquirer
-		.prompt(results.map(result => ({
-			message: `Do you want to watch "${result.title}", starring ${cast[result.id][0]?.name} and ${cast[result.id][1]?.name}?`,
+		.prompt(movies.map(result => ({
+			message: `Do you want to watch "${result.title}", starring ${store.data[String(result.id)]._cast[0]?.name} and ${store.data[String(result.id)]._cast[1]?.name}?`,
 			name: result.id,
 			type: 'confirm'
 		})))
 		.then(answers => {
 			for (const movieId in answers) { // loop through each movie
-				for (const { id } of cast[movieId]) voteCast(store, id, answers[movieId]); // update each actor
-				if (genresToExclude.length !== 1) for (const id of results.find(result => result.id === Number(movieId)).genre_ids) voteGenre(store, id, answers[movieId]); // update each genre
-				for (const { id } of keywords[movieId]) voteKeyword(store, id, answers[movieId]); // update each keyword
+				if (store.movies[movieId] === undefined) store.movies[movieId] = answers[movieId] ? 1 : -1; // if it doesn't exist yet, set the movie to +1 or -1
+				else answers[movieId] ? store.movies[movieId]++ : store.movies[movieId]--; // otherwise add or subtract 1 to the movie
+
+				for (const { id } of store.data[movieId]._cast) voteCast(id, answers[movieId]); // update each actor
+				if (genresToExclude.length !== 1) for (const id of movies.find(result => result.id === Number(movieId)).genre_ids) voteGenre(id, answers[movieId]); // update each genre
+				for (const { id } of store.data[movieId]._keywords) voteKeyword(id, answers[movieId]); // update each keyword
+			}
+
+			const recommended = movies.filter(result => store.movies[String(result.id)] >= 3); // find movies that have a better score
+
+			if (recommended.length >= 1) {
+				console.log('Try one of these movies:');
+				console.log(recommended.map(movie => `(${movie.vote_average}/10) ${movie.title}: ${movie.overview.substr(50)}...`).join('\n\n')); // output movie list
+				inquirer
+					.prompt([
+						{
+							message: 'Stop (yes) or continue matching (no)?',
+							name: 'end',
+							type: 'confirm'
+						}
+					])
+					.then(({ end }) => {
+						if (end) {
+							console.log('Enjoy your movie!');
+						} else {
+							main({
+								genresToExclude,
+								region,
+								services
+							}); // recursively continue
+						}
+					});
+			} else {
+				main({
+					genresToExclude,
+					region,
+					services
+				}); // recursively continue
 			}
 		});
+}
+
+async function main({
+	genresToExclude,
+	region,
+	services
+}) {
+	console.log('Processing...');
+
+	const liked = Object.keys(store.movies).filter(id => store.movies[id] >= 2); // get liked movies from store
+
+	if (liked.length >= 1) { // if there's at least 1 movie...
+		let similar = [];
+		for (let i = 0; i < Math.min(liked.length, 5); i++) { // loop over the `liked` array
+			const random = Math.floor(Math.random() * liked.length); // select a random element
+			similar = [
+				...similar,
+				...(await tmdb.movieSimilar({ id: liked[random] })).results.splice(0, 3) // fetch up to 3 similar movies
+			]; // and merge the array into `similar`
+		}
+
+		similar.forEach(movie => {
+			store.data[String(movie.id)] = movie;
+		}); // cache movie data
+
+		ask(similar, {
+			genresToExclude,
+			region,
+			services
+		});
+	} else {
+		const params = {
+			sort_by: 'popularity.desc', // get the most popular
+			watch_region: region, // only include movies streamable in the user's region
+			without_genres: genresToExclude.join(',') // only include movies without these genres
+		};
+
+		if (!services.includes(-1)) params.with_watch_providers = services.join(','); // if services doesn't include buying/renting, add services to query
+
+		const with_cast = Object.keys(store.cast).filter(id => store.cast[id] >= 2);
+		if (with_cast.length >= 1) params.with_cast = with_cast.join(',');
+		// TMDb API does not have a without_cast parameter
+
+		const with_genres = Object.keys(store.genres).filter(id => store.genres[id] >= 2); // Math.ceil(store.movies.length / store.genres[id])
+		const without_genres = Object.keys(store.genres).filter(id => store.genres[id] <= -1);
+		if (without_genres.length !== 0 && with_genres.length > without_genres.length) params.with_genres = with_genres.join(','); // only include these genres
+		else params.without_genres = [...genresToExclude, ...without_genres].join(','); // or exclude these genres
+
+		const with_keywords = Object.keys(store.keywords).filter(id => store.keywords[id] >= 2);
+		const without_keywords = Object.keys(store.keywords).filter(id => store.keywords[id] <= -1);
+		if (without_keywords.length !== 0 && with_keywords.length > without_keywords.length) params.with_keywords = with_keywords.join(','); // only include these keywords
+		else params.without_keywords = without_keywords.join('|'); // or exclude these keywords (comma=AND, pipe=OR)
+
+		const movies = (await tmdb.discoverMovie(params)).results.splice(0, 10); // fetch movies from TMDB API using query params, limit to 10 movies max
+		movies.forEach(result => {
+			store.data[String(result.id)] = result;
+		}); // cache movie data
+
+		if (movies.length === 1) return console.log(`There's only movie left: ${movies[0].title}`); // end, only 1 movie
+		else if (movies.length === 0) return console.log('You\'ve run out of movies :('); // end, no movies
+
+		ask(movies, {
+			genresToExclude,
+			region,
+			services
+		});
+	}
+
+
 }

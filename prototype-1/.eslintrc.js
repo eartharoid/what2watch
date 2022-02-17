@@ -107,7 +107,8 @@ module.exports = {
 			'error'
 		],
 		'multiline-comment-style': [
-			'warn'
+			// 'warn'
+			'off'
 		],
 		'no-console': [
 			'off'
@@ -122,7 +123,8 @@ module.exports = {
 			'error'
 		],
 		'no-underscore-dangle': [
-			'error'
+			// 'error'
+			'off'
 		],
 		'no-unneeded-ternary': [
 			'error'
