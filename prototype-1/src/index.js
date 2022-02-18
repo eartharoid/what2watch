@@ -128,7 +128,7 @@ async function ask(movies, {
 
 			if (recommended.length >= 1) {
 				console.log('Try one of these movies:');
-				console.log(recommended.map(movie => `(${movie.vote_average}/10) ${movie.title}: ${movie.overview.substr(50)}...`).join('\n\n')); // output movie list
+				console.log(recommended.map(movie => `(${movie.vote_average}/10) ${movie.title}: ${movie.overview.substr(0, 100)}...`).join('\n\n')); // output movie list
 				inquirer
 					.prompt([
 						{
