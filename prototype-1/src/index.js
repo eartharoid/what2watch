@@ -76,17 +76,17 @@ inquirer
 	});
 
 
-function voteCast(id, vote) {
+function voteCast(id, vote) { // update a cast member
 	if (store.cast[id] === undefined) store.cast[id] = vote ? 1 : -1; // if it doesn't exist yet, set it to +1 or -1
 	else vote ? store.cast[id]++ : store.cast[id]--; // add or subtract 1
 }
 
-function voteGenre(id, vote) {
+function voteGenre(id, vote) { // same as above
 	if (store.genres[id] === undefined) store.genres[id] = vote ? 1 : -1;
 	else vote ? store.genres[id]++ : store.genres[id]--;
 }
 
-function voteKeyword(id, vote) {
+function voteKeyword(id, vote) { // same as above
 	if (store.keywords[id] === undefined) store.keywords[id] = vote ? 1 : -1;
 	else vote ? store.keywords[id]++ : store.keywords[id]--;
 }
