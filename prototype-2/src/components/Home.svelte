@@ -1,9 +1,8 @@
-<!-- <script>
+<script>
 	export let socket;
-	socket.on("connect", () => {
-		console.log(socket.id);
-	});
-</script> -->
+
+	console.log(socket.emit('sessionStart'))
+</script>
 
 <main class="flex flex-col items-center justify-center">
 	<img src="/icons/128.png" alt="What2Watch" class="rounded-2xl" /> 
