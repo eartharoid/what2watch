@@ -1,3 +1,3 @@
-module.exports = (store, connection, info) => {
+module.exports = (store, socket, info) => {
 	console.log(store, info);
 };
