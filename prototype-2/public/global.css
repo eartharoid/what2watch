@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+body {
+	margin: 0px;
+	background-color: #0D1117;
+}
+
+
+/* Glassmorphism card effect */
+.body:after {
+	backdrop-filter: blur(16px) saturate(180%);
+	-webkit-backdrop-filter: blur(16px) saturate(180%);
+	background-color: rgba(17, 25, 40, 0.75);
+	border-radius: 12px;
+	border: 1px solid rgba(255, 255, 255, 0.125);
+}
+
+noscript {
+	background-color: tomato;
+	font-weight: bold;
+}
+
+main {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	max-width: 390px;
+	max-height: 844px;
+	border: solid 7px #1A222E;
+	height: 100vh;
+	background-size: cover;
+	background: rgb(2, 0, 36);
+	background: linear-gradient(320deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(0, 212, 255, 1) 100%);
+	color: white;
+	font-family: 'Montserrat', sans-serif;
+	border-radius: 20px;
+	box-shadow: 10px 15px 20px black;
+}
+
+button {
+	background-color: white;
+	color: black;
+	padding: .75em;
+	border-radius: 15px;
+	border: none;
+	cursor: pointer;
+}
+
+.page {
+	display: none;
+	margin: 20px;
+}

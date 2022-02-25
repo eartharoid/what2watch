@@ -1,26 +1,24 @@
-const store = { sessions: {} };
+const store = { sessions: {} }; // the session store
 
 const { readdirSync } = require('fs');
 const { join } = require('path');
-const events = readdirSync(join(__dirname, '/socket'))
-	.filter(name => name.endsWith('.js'))
-	.map(name => name.split(/\./)[0]);
+const events = readdirSync(join(__dirname, '/socket')) // read directory
+	.filter(name => name.endsWith('.js')) // filter array to only include JS files
+	.map(name => name.split(/\./)[0]); // get the file names without extensions (remove `.js`)
 
 const fastify = require('fastify')();
+fastify.register(require('fastify-cors'), { origin: true }); // allow CORS
 
-fastify.register(require('fastify-cors'), { origin: true });
-
-fastify.get('/', async () => 'The public facing app is at https://what2watch.eartharoid.me');
+fastify.register(require('fastify-static'), { root: join(__dirname, '../public') }); // serve static files from public directory
 
 fastify.listen(process.env.HTTP_PORT || 8080, (err, host) => {
 	if (err) throw err;
 	console.log(host);
-});
+}); // start the HTTP server
 
-const io_options = {};
-if (process.env.NODE_ENV !== 'production') io_options.cors = { origin: [process.env.HTTP_HOST, 'http://localhost:8080', 'http://localhost:5000'] };
+const io_options = { cors: { origin: [process.env.HTTP_HOST, 'http://localhost:8080'] } }; // set origins for CORS
 
-const io = require('socket.io')(fastify.server, io_options);
+const io = require('socket.io')(fastify.server, io_options); // start IO with the fastify HTTP server
 
 io.on('connection', async socket => {
 	// const { auth } = socket.handshake;
