@@ -1,0 +1,20 @@
+{
+  "name": "what2watch-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "eslint": "^8.1.0",
+    "fastify": "^3.22.1",
+    "fastify-cors": "^6.0.2",
+    "socket.io": "^4.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.14"
+  }
+}
