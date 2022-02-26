@@ -1,4 +1,5 @@
 let sessionId = null;
+let movies = null;
 
 const socket = io();
 
@@ -6,10 +7,11 @@ socket.on('connect', () => {
 	console.log('socket#:', socket.id);
 });
 
-socket.on('receiveMovies', movies => {
+socket.on('receiveMovies', _movies => {
 	console.log(movies);
+	movies = _movies;
 	showPage('pid_vote');
-	askVote(movie);
+	askVote(movies[0]);
 });
 
 socket.on('endSession', movie => {
@@ -57,9 +59,12 @@ function startSession(event) {
 }
 
 function askVote(movie) {
-
+	document.getElementById('app').style.backgroundImage = `linear-gradient(to bottom, rgba(0, 0, 0, 1.0), rgba(0, 0, 0, 0.5)), url("https://www.themoviedb.org/t/p/w1920_and_h800_multi_faces${movie.backdrop_path}")`;
+	document.getElementById('eid_vote_img').src = `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${movie.poster_path}`;
+	document.getElementById('eid_vote_title').innerText = movie.title;
+	document.getElementById('eid_vote_rating').innerText = `${movie.vote_average}/10`;
+	document.getElementById('eid_vote_description').innerText = movie.overview;
 }
-
 
 function voteYes() {}
 
