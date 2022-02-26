@@ -1,38 +1,60 @@
 {
-	"dotenv@16.0.0": {
-		"licenses": "BSD-2-Clause",
-		"repository": "https://github.com/motdotla/dotenv",
-		"path": "F:\\Projects\\what2watch\\Prototype 1\node_modules\\dotenv",
-		"licenseFile": "F:\\Projects\\what2watch\\Prototype 1\node_modules\\dotenv\\LICENSE"
-	},
-	"inquirer@8.2.0": {
-		"licenses": "MIT",
-		"repository": "https://github.com/SBoudrias/Inquirer.js",
-		"publisher": "Simon Boudrias",
-		"email": "admin@simonboudrias.com",
-		"path": "F:\\Projects\\what2watch\\Prototype 1\node_modules\\inquirer",
-		"licenseFile": "F:\\Projects\\what2watch\\Prototype 1\node_modules\\inquirer\\LICENSE"
-	},
-	"iso-3166-1@2.1.1": {
-		"licenses": "MIT",
-		"repository": "https://github.com/ecrmnn/iso-3166-1",
-		"publisher": "Daniel Eckermann",
-		"email": "danieleckermann@gmail.com",
-		"url": "http://danieleckermann.com",
-		"path": "F:\\Projects\\what2watch\\Prototype 1\node_modules\\iso-3166-1",
-		"licenseFile": "F:\\Projects\\what2watch\\Prototype 1\node_modules\\iso-3166-1\\README.md"
-	},
-	"moviedb-promise@3.1.13": {
-		"licenses": "MIT",
-		"repository": "https://github.com/grantholle/moviedb-promise",
-		"publisher": "Grant Holle",
-		"email": "https://github.com/grantholle",
-		"path": "F:\\Projects\\what2watch\\Prototype 1\node_modules\\moviedb-promise",
-		"licenseFile": "F:\\Projects\\what2watch\\Prototype 1\node_modules\\moviedb-promise\\LICENSE.md"
-	},
-	"prototype-1@0.0.1": {
-		"licenses": "MIT",
-		"path": "F:\\Projects\\what2watch\\Prototype 1",
-		"licenseFile": "F:\\Projects\\what2watch\\Prototype 1\\README"
-	}
+  "dotenv@16.0.0": {
+    "licenses": "BSD-2-Clause",
+    "repository": "https://github.com/motdotla/dotenv",
+    "path": "F:\\Projects\\what2watch\\prototype-2\\node_modules\\dotenv",
+    "licenseFile": "F:\\Projects\\what2watch\\prototype-2\\node_modules\\dotenv\\LICENSE"
+  },
+  "fastify-cors@6.0.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/fastify/fastify-cors",
+    "publisher": "Tomas Della Vedova - @delvedor",
+    "url": "http://delved.org",
+    "path": "F:\\Projects\\what2watch\\prototype-2\\node_modules\\fastify-cors",
+    "licenseFile": "F:\\Projects\\what2watch\\prototype-2\\node_modules\\fastify-cors\\LICENSE"
+  },
+  "fastify-static@4.5.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/fastify/fastify-static",
+    "publisher": "Tommaso Allevi - @allevo",
+    "path": "F:\\Projects\\what2watch\\prototype-2\\node_modules\\fastify-static",
+    "licenseFile": "F:\\Projects\\what2watch\\prototype-2\\node_modules\\fastify-static\\LICENSE"
+  },
+  "fastify@3.27.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/fastify/fastify",
+    "publisher": "Matteo Collina",
+    "email": "hello@matteocollina.com",
+    "path": "F:\\Projects\\what2watch\\prototype-2\\node_modules\\fastify",
+    "licenseFile": "F:\\Projects\\what2watch\\prototype-2\\node_modules\\fastify\\LICENSE"
+  },
+  "iso-3166-1@2.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ecrmnn/iso-3166-1",
+    "publisher": "Daniel Eckermann",
+    "email": "danieleckermann@gmail.com",
+    "url": "http://danieleckermann.com",
+    "path": "F:\\Projects\\what2watch\\prototype-2\\node_modules\\iso-3166-1",
+    "licenseFile": "F:\\Projects\\what2watch\\prototype-2\\node_modules\\iso-3166-1\\README.md"
+  },
+  "moviedb-promise@3.1.13": {
+    "licenses": "MIT",
+    "repository": "https://github.com/grantholle/moviedb-promise",
+    "publisher": "Grant Holle",
+    "email": "https://github.com/grantholle",
+    "path": "F:\\Projects\\what2watch\\prototype-2\\node_modules\\moviedb-promise",
+    "licenseFile": "F:\\Projects\\what2watch\\prototype-2\\node_modules\\moviedb-promise\\LICENSE.md"
+  },
+  "socket.io@4.4.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/socketio/socket.io",
+    "path": "F:\\Projects\\what2watch\\prototype-2\\node_modules\\socket.io",
+    "licenseFile": "F:\\Projects\\what2watch\\prototype-2\\node_modules\\socket.io\\LICENSE"
+  },
+  "what2watch@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/eartharoid/what2watch",
+    "publisher": "Isaac Saunders",
+    "path": "F:\\Projects\\what2watch\\prototype-2"
+  }
 }

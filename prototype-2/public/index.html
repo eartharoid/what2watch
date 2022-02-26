@@ -24,46 +24,63 @@
 	</noscript>
 
 	<main id="app">
+		<div class="page" id="pid_loading">
+			<img src="/icons/128.png" style="margin:15px; border-radius:25px;" />
+		
+			<h1>Loading...</h1>
+			<p>Please be patient, this may take a few seconds.</p>
+		</div>
+
 		<div id="pid_home">
-			<img src="/icons/128.png" style="margin:15px; border-radius: 25px;" />
+			<img src="/icons/128.png" style="margin:15px; border-radius:25px;" />
 
 			<h2>Join or start a session?</h2>
 
-			<button onclick="joinSession();">Join a friend</button>
+			<!-- <button onclick="showPage('pid_join');">Join a friend</button> -->
 			<br><br>
-			<button onclick="startSession()">Start new session</button>
-
-
-			<!-- <h3>Genres</h3>
-			<form id="genres">
-				<ul style="list-style: none;">
-					<li>
-						<label for="Netflix">
-							<input type="checkbox" name="Netflix">
-							Netflix
-						</label>
-					</li>
-					<li>
-						<label for="Disney+">
-							<input type="checkbox" name="Disney+">
-							Disney+
-						</label>
-					</li>
-					<li>
-						<label for="Buy or Rent (any)">
-							<input type="checkbox" name="Buy or Rent (any)">
-							Buy or Rent (any
-						</label>
-					</li>
-				</ul>
-			</form> -->
-
+			<button onclick="showPage('pid_start');">Start new session</button>
 		</div>
 
 		<div class="page" id="pid_join">
 			<input type="text" id="sessionId" placeholder="Session ID">
 			<button onclick="joinSession(document.getElementById('sessionId').value)">Join</button>
-			<p id="pid_join_error" style="color:tomato; font-weight: bold;"></p>
+			<p id="eid_join_error" style="color:tomato; font-weight: bold;"></p>
+		</div>
+
+		<div class="page" id="pid_start" action="#">
+			<h3>Genres</h3>
+			<p>
+				Which genres do you want to <strong>EXCLUDE</strong>?
+			</p>
+				<form onsubmit="startSession(event);">
+					<select name="genres" id="genres" multiple style="padding:1em; min-height:15em;">
+						<option value="28">Action</option>
+						<option value="12">Adventure</option>
+						<option value="16">Animation</option>
+						<option value="35">Comedy</option>
+						<option value="80">Crime</option>
+						<option value="99">Documentary</option>
+						<option value="18">Drama</option>
+						<option value="10751">Family</option>
+						<option value="14">Fantasy</option>
+						<option value="36">History</option>
+						<option value="27">Horror</option>
+						<option value="10402">Music</option>
+						<option value="9648">Mystery</option>
+						<option value="10749">Romance</option>
+						<option value="878">Science Fiction</option>
+						<option value="10770">TV Movie</option>
+						<option value="53">Thriller</option>
+						<option value="10752">War</option>
+						<option value="37">Western</option>
+					</select>
+					<br><br>
+					<button type="submit">Start</button>
+				</form>
+		</div>
+
+		<div class="page" id="pid_vote">
+
 		</div>
 
 	</main>

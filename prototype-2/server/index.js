@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const store = { sessions: {} }; // the session store
 
 const { readdirSync } = require('fs');
@@ -21,10 +23,12 @@ const io_options = { cors: { origin: [process.env.HTTP_HOST, 'http://localhost:8
 const io = require('socket.io')(fastify.server, io_options); // start IO with the fastify HTTP server
 
 io.on('connection', async socket => {
-	// const { auth } = socket.handshake;
 	console.log('A client has connected to the socket');
 	for (const event of events) {
-		const execute = require(`./socket/${event}.js`);
-		socket.on(event, (...args) => execute(store, socket, ...args));
+		const execute = require(`./socket/${event}.js`); // import the function
+		socket.on(event, (...args) => execute(store, {
+			io,
+			socket
+		}, ...args)); // on event, execute function
 	}
 });

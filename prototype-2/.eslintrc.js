@@ -123,7 +123,7 @@ module.exports = {
 			'error'
 		],
 		'no-underscore-dangle': [
-			'error'
+			'off'
 		],
 		'no-unneeded-ternary': [
 			'error'
