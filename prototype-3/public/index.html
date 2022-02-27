@@ -36,15 +36,33 @@
 
 			<h2>Join or start a session?</h2>
 
-			<!-- <button onclick="showPage('pid_join');">Join a friend</button> -->
+			<button onclick="showPage('pid_join');">Join a friend</button>
 			<br><br>
 			<button onclick="showPage('pid_start');">Start new session</button>
 		</div>
 
 		<div class="page" id="pid_join">
+			<img src="/icons/128.png" style="margin:15px; border-radius:25px;" />
+			<br>
 			<input type="text" id="sessionId" placeholder="Session ID">
+			<br><br>
 			<button onclick="joinSession(document.getElementById('sessionId').value)">Join</button>
-			<p id="eid_join_error" style="color:tomato; font-weight: bold;"></p>
+			<br><br>
+			<span id="eid_join_error" style="color:white; background-color:tomato; font-weight:bold; padding:0.25em; display:none;"></span>
+		</div>
+
+		<div class="page" id="pid_pre_start">
+			<img src="/icons/128.png" style="margin:15px; border-radius:25px;" />
+		
+			<h1>Waiting</h1>
+			<p>The session will begin when the leader clicks the "Start" button.</p>
+		</div>
+
+		<div class="page" id="pid_pre_start_leader">
+			<img src="/icons/128.png" style="margin:15px; border-radius:25px;" />
+			<p>Share this code with your friends so they can join:</p>
+			<h3 id="eid_pre_start_code" style="font-family: 'Courier New', Courier, monospace;"></h3>
+			<button onclick="startSession();">Start</button>
 		</div>
 
 		<div class="page" id="pid_start" action="#">
@@ -52,7 +70,7 @@
 			<p>
 				Which genres do you want to <strong>EXCLUDE</strong>?
 			</p>
-				<form onsubmit="startSession(event);">
+				<form onsubmit="setGenres(event);">
 					<select name="genres" id="genres" multiple style="padding:1em; min-height:15em;">
 						<option value="28">Action</option>
 						<option value="12">Adventure</option>
@@ -75,7 +93,7 @@
 						<option value="37">Western</option>
 					</select>
 					<br><br>
-					<button type="submit">Start</button>
+					<button type="submit">Next</button>
 				</form>
 		</div>
 

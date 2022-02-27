@@ -1,3 +1,4 @@
+let leader = false;
 let sessionId = null;
 let queue = [];
 
@@ -50,31 +51,33 @@ function showPage(id) {
 }
 
 function joinSession(id) {
-	if (id) {
-		console.log(id);
-		socket.emit('joinSession', { id }, response => {
-			if (response === true) {
-				// do something
-			} else {
-				const element = document.getElementById('eid_join_error'); // get the paragraph element
-				element.innerHTML = response; // output error
-			}
-		});
-	} else {
-		showPage('pid_join');
-	}
+	console.log(id);
+	socket.emit('joinSession', { id }, response => {
+		if (response === true) {
+			showPage('pid_pre_start'); // show waiting screen
+		} else {
+			const element = document.getElementById('eid_join_error'); // get the paragraph element
+			element.innerHTML = response; // output error
+			element.style.display = ''; // unhide
+		}
+	});
 }
 
-function startSession(event) {
-	showPage('pid_loading'); // show loading screen
+function setGenres(event) {
 	event.preventDefault(); // prevent form submission
 	const data = new FormData(event.target); // get the form data object
 	const genres = [];
 	data.forEach(value => genres.push(value)); // as the form only has 1 field, this super simple for-loop works for getting all of the `genres` entries
 	socket.emit('startSession', { genres }, response => {
 		sessionId = response;
-		socket.emit('requestMovies'); // ask for movies
+		document.getElementById('eid_pre_start_code').innerText = response;
+		showPage('pid_pre_start_leader'); // show waiting screen
 	});
+}
+
+function startSession() {
+	showPage('pid_loading'); // show loading screen
+	socket.emit('requestMovies'); // ask for movies
 }
 
 function askVote(movie) {
