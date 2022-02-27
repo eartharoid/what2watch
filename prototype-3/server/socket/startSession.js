@@ -4,7 +4,9 @@ module.exports = (store, { socket }, data, callback) => {
 	const id = crypto.randomBytes(3).toString('hex'); // generate a random 6-character session ID
 	store.sessions[id] = {
 		cast: {},
+		clients: [socket.id],
 		data: {},
+		finishedVoting: [],
 		genres: {},
 		genresToExclude: data.genres,
 		keywords: {},

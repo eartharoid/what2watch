@@ -51,17 +51,23 @@
 			<span id="eid_join_error" style="color:white; background-color:tomato; font-weight:bold; padding:0.25em; display:none;"></span>
 		</div>
 
-		<div class="page" id="pid_pre_start">
+		<div class="page" id="pid_leader_waiting">
 			<img src="/icons/128.png" style="margin:15px; border-radius:25px;" />
-		
 			<h1>Waiting</h1>
-			<p>The session will begin when the leader clicks the "Start" button.</p>
+			<p>Please wait for everyone else to finish voting.</p>
 		</div>
 
-		<div class="page" id="pid_pre_start_leader">
+		<div class="page" id="pid_waiting_for_leader">
+			<img src="/icons/128.png" style="margin:15px; border-radius:25px;" />
+			<h1>Waiting</h1>
+			<p>Please wait for the session leader.</p>
+		</div>
+
+		<div class="page" id="pid_pre_start">
 			<img src="/icons/128.png" style="margin:15px; border-radius:25px;" />
 			<p>Share this code with your friends so they can join:</p>
-			<h3 id="eid_pre_start_code" style="font-family: 'Courier New', Courier, monospace;"></h3>
+			<h2 id="eid_pre_start_code" style="font-family: 'Courier New', Courier, monospace;"></h2>
+			<p>Don't start until everyone has joined.</p>
 			<button onclick="startSession();">Start</button>
 		</div>
 

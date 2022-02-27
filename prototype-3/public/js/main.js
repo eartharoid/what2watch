@@ -14,20 +14,22 @@ socket.on('receiveMovies', movies => {
 	askVote(queue.shift()); // take the first element from the queue and ask for yes/no vote
 });
 
-socket.on('receiveRecommended', movies => {
-	console.log(movies);
-	if (movies.length >= 1) {
-		const list = document.getElementById('eid_recommended_list'); // get list element
-		movies.forEach(movie => { // for each of the movies
-			const li = document.createElement('li'); // create new list item
-			li.innerText = movie.title; // insert movie title
-			list.appendChild(li); // append list item onto list
-		});
-		showPage('pid_recommended'); // show recommendations screen
-	} else {
-		showPage('pid_loading'); // show loading screen
-		socket.emit('requestMovies'); // ask for movies
-	}
+socket.on('readyToContinue', () => {
+	socket.emit('getRecommended', movies => {  // request recommended movies
+		console.log(movies);
+		if (movies.length >= 1) {
+			const list = document.getElementById('eid_recommended_list'); // get list element
+			movies.forEach(movie => { // for each of the movies
+				const li = document.createElement('li'); // create new list item
+				li.innerText = movie.title; // insert movie title
+				list.appendChild(li); // append list item onto list
+			});
+			showPage('pid_recommended'); // show recommendations screen
+		} else {
+			showPage('pid_loading'); // show loading screen
+			socket.emit('requestMovies'); // ask for movies
+		}
+	});
 });
 
 socket.on('endSession', movie => {
@@ -50,11 +52,11 @@ function showPage(id) {
 	document.getElementById(id).style.display = 'block'; // show the desired page
 }
 
-function joinSession(id) {
+function joinSession(id) { // join an existing session
 	console.log(id);
 	socket.emit('joinSession', { id }, response => {
 		if (response === true) {
-			showPage('pid_pre_start'); // show waiting screen
+			showPage('pid_waiting_for_leader'); // show waiting screen
 		} else {
 			const element = document.getElementById('eid_join_error'); // get the paragraph element
 			element.innerHTML = response; // output error
@@ -63,7 +65,7 @@ function joinSession(id) {
 	});
 }
 
-function setGenres(event) {
+function setGenres(event) { // create a new session
 	event.preventDefault(); // prevent form submission
 	const data = new FormData(event.target); // get the form data object
 	const genres = [];
@@ -71,11 +73,12 @@ function setGenres(event) {
 	socket.emit('startSession', { genres }, response => {
 		sessionId = response;
 		document.getElementById('eid_pre_start_code').innerText = response;
-		showPage('pid_pre_start_leader'); // show waiting screen
+		showPage('pid_pre_start'); // show waiting screen
 	});
 }
 
-function startSession() {
+function startSession() { // only runs when creating a new session
+	leader = true; // set leader to true
 	showPage('pid_loading'); // show loading screen
 	socket.emit('requestMovies'); // ask for movies
 }
@@ -98,8 +101,13 @@ function voteYes(id) {
 		id,
 		vote: true
 	}); // submit vote to server
-	if (queue.length >= 1) askVote(queue.shift()); // if there's more movies in the queue,take the first element and ask for yes/no vote
-	else socket.emit('getRecommended'); // otherwise, request recommended movies
+
+	if (queue.length >= 1) { // if there's more movies in the queue,
+		askVote(queue.shift()); // take the first element and ask for yes/no vote
+	} else  {
+		socket.emit('finishedVoting'); // let the server know that the client is waiting
+		leader ? showPage('pid_leader_waiting') : showPage('pid_waiting_for_leader'); // then show waiting screen
+	}
 }
 
 function voteNo(id) {
@@ -109,6 +117,11 @@ function voteNo(id) {
 		id,
 		vote: false
 	}); // submit vote to server
-	if (queue.length >= 1) askVote(queue.shift()); // if there's more movies in the queue,take the first element and ask for yes/no vote
-	else socket.emit('getRecommended'); // otherwise, request recommended movies
+
+	if (queue.length >= 1) { // if there's more movies in the queue,
+		askVote(queue.shift()); // take the first element and ask for yes/no vote
+	} else {
+		socket.emit('finishedVoting'); // let the server know that the client is waiting
+		leader ? showPage('pid_leader_waiting') : showPage('pid_waiting_for_leader'); // then show waiting screen
+	}
 }
