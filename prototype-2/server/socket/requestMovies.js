@@ -6,9 +6,7 @@ module.exports = async (store, {
 	socket
 }) => {
 	const sessionId = [...socket.rooms][1]; // convert the Set to an Array and get the second element (first is the socket ID)
-
 	let movies;
-
 	const liked = Object.keys(store.sessions[sessionId].movies).filter(id => store.sessions[sessionId].movies[id] >= 2); // get liked movies from store
 
 	if (liked.length >= 1) { // if there's at least 1 movie...
