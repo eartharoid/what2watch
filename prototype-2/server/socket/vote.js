@@ -1,4 +1,4 @@
-module.exports = (store, { socket }, data, callback) => {
+module.exports = (store, { socket }, data) => {
 	const sessionId = [...socket.rooms][1]; // convert the Set to an Array and get the second element (first is the socket ID)
 
 	function voteCast(id, vote) { // update a cast member
@@ -16,4 +16,12 @@ module.exports = (store, { socket }, data, callback) => {
 		else vote ? store.sessions[sessionId].keywords[id]++ : store.sessions[sessionId].keywords[id]--;
 	}
 
+	if (store.sessions[sessionId].movies[data.id] === undefined) store.sessions[sessionId].movies[data.id] = data.vote ? 1 : -1; // if it doesn't exist yet, set the movie to +1 or -1
+	else data.vote ? store.sessions[sessionId].movies[data.id]++ : store.sessions[sessionId].movies[data.id]--; // otherwise add or subtract 1 to the movie
+
+	for (const { id } of store.sessions[sessionId].data[data.id]._cast) voteCast(id, data.vote); // update each actor
+	if (store.sessions[sessionId].genresToExclude.length !== 1) {
+		for (const id of store.sessions[sessionId].data[data.id].genre_ids) voteGenre(id, data.vote); // update each genre
+	}
+	for (const { id } of store.sessions[sessionId].data[data.id]._keywords) voteKeyword(id, data.vote); // update each keyword
 };

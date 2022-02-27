@@ -26,9 +26,10 @@ main {
 	color: white;
 	border-radius: 20px;
 	box-shadow: 10px 15px 20px black;
+	overflow-y: auto;
 }
 
-button {
+button, .button {
 	background-color: white;
 	color: black;
 	padding: .75em;

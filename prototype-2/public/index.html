@@ -85,8 +85,31 @@
 			<p id="eid_vote_rating"></p>
 			<p id="eid_vote_description"></p>
 			<p>Do you want to watch this movie?</p>
-			<button onclick="voteYes();">👍 Yes</button>
-			<button onclick="voteNo();">👎 No</button>
+			<button id="eid_vote_btn_yes">👍 Yes</button>
+			<button  id="eid_vote_btn_no">👎 No</button>
+		</div>
+
+		<div class="page" id="pid_recommended">
+			<h2>Recommendations</h2>
+			<p>Do you want to watch one of these?</p>
+			<ul id="eid_recommended_list"></ul>
+			<button onclick="socket.emit('endSession');">End session</button>
+			<button onclick="showPage('pid_loading');socket.emit('requestMovies');">Keep going</button>
+		</div>
+
+		<div class="page" id="pid_end">
+			<img src="/icons/128.png" style="margin:15px; border-radius:25px;" />
+			<h2>You've reached the end</h2>
+		</div>
+
+		<div class="page" id="pid_end_with_movie">
+			<img src="/icons/128.png" style="margin:15px; border-radius:25px;" />
+			<h2>There's only one movie left</h2>
+			<img id="eid_end_last_movie_img" src="" />
+			<h3 id="eid_end_last_movie_title"></h3>
+			<p id="eid_end_last_movie_rating"></p>
+			<p id="eid_end_last_movie_description"></p>
+			<a id="eid_end_last_movie_watch_btn" class="button">Watch</a>
 		</div>
 
 	</main>
