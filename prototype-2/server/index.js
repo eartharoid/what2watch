@@ -13,8 +13,8 @@ fastify.register(require('fastify-cors'), { origin: true }); // allow CORS
 
 fastify.register(require('fastify-static'), { root: join(__dirname, '../public') }); // serve static files from public directory
 
-fastify.listen(process.env.HTTP_PORT || 8080, (err, host) => {
-	if (err) throw err;
+fastify.listen(process.env.HTTP_PORT || 8080, (error, host) => {
+	if (error) throw error;
 	console.log(host);
 }); // start the HTTP server
 

@@ -21,9 +21,9 @@ module.exports = async (store, {
 			]; // and merge the array into `similar`
 		}
 
-		similar.forEach(movie => {
-			store.sessions[sessionId].data[String(movie.id)] = movie;
-		}); // cache movie data
+		similar.forEach(movie => { // for each movie
+			store.sessions[sessionId].data[String(movie.id)] = movie; // cache movie data
+		});
 
 		movies = similar;
 	} else {
@@ -32,17 +32,17 @@ module.exports = async (store, {
 			without_genres: store.sessions[sessionId].genresToExclude.join(',') // only include movies without these genres
 		};
 
-		const with_cast = Object.keys(store.sessions[sessionId].cast).filter(id => store.sessions[sessionId].cast[id] >= 2);
+		const with_cast = Object.keys(store.sessions[sessionId].cast).filter(id => store.sessions[sessionId].cast[id] >= 2); // get IDs of cast with a score of 2 or more
 		if (with_cast.length >= 1) params.with_cast = with_cast.join(',');
 		// TMDb API does not have a without_cast parameter
 
 		const with_genres = Object.keys(store.sessions[sessionId].genres).filter(id => store.sessions[sessionId].genres[id] >= 2); // Math.ceil(store.sessions[sessionId].movies.length / store.sessions[sessionId].genres[id])
-		const without_genres = Object.keys(store.sessions[sessionId].genres).filter(id => store.sessions[sessionId].genres[id] <= -1);
+		const without_genres = Object.keys(store.sessions[sessionId].genres).filter(id => store.sessions[sessionId].genres[id] <= -1); // get IDs of genres with a score of -1 or less
 		if (without_genres.length !== 0 && with_genres.length > without_genres.length) params.with_genres = with_genres.join(','); // only include these genres
 		else params.without_genres = [...store.sessions[sessionId].genresToExclude, ...without_genres].join(','); // or exclude these genres
 
-		const with_keywords = Object.keys(store.sessions[sessionId].keywords).filter(id => store.sessions[sessionId].keywords[id] >= 2);
-		const without_keywords = Object.keys(store.sessions[sessionId].keywords).filter(id => store.sessions[sessionId].keywords[id] <= -1);
+		const with_keywords = Object.keys(store.sessions[sessionId].keywords).filter(id => store.sessions[sessionId].keywords[id] >= 2); // get IDs of keywords with a score of 2 or more
+		const without_keywords = Object.keys(store.sessions[sessionId].keywords).filter(id => store.sessions[sessionId].keywords[id] <= -1); // get IDs of keywords with a score of -1 or less
 		if (without_keywords.length !== 0 && with_keywords.length > without_keywords.length) params.with_keywords = with_keywords.join(','); // only include these keywords
 		else params.without_keywords = without_keywords.join('|'); // or exclude these keywords (comma=AND, pipe=OR)
 
@@ -52,7 +52,7 @@ module.exports = async (store, {
 		}); // cache movie data
 
 		if (movies.length === 1) {
-			io.to(sessionId).emit('endSession', movies[0]);// end, only 1 movie
+			io.to(sessionId).emit('endSession', movies[0]); // end, only 1 movie
 			return;
 		} else if (movies.length === 0) {
 			io.to(sessionId).emit('endSession');  // end, no movies
@@ -62,13 +62,13 @@ module.exports = async (store, {
 
 	for (const result of movies) {
 		if (store.sessions[sessionId].data[String(result.id)]._cast === undefined) {
-			store.sessions[sessionId].data[String(result.id)]._cast = (await tmdb.movieCredits({ id: result.id })).cast.splice(0, 25);
+			store.sessions[sessionId].data[String(result.id)]._cast = (await tmdb.movieCredits({ id: result.id })).cast.splice(0, 25); // cache the cast
 		}
 	} // fetch credits for each movie, limit to 25
 
 	for (const result of movies) {
 		if (store.sessions[sessionId].data[String(result.id)]._keywords === undefined) {
-			store.sessions[sessionId].data[String(result.id)]._keywords = (await tmdb.movieKeywords({ id: result.id })).keywords;
+			store.sessions[sessionId].data[String(result.id)]._keywords = (await tmdb.movieKeywords({ id: result.id })).keywords; // cache the keywords
 		}
 	} // fetch keywords for each movie
 

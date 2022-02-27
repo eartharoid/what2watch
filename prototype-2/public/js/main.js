@@ -9,37 +9,37 @@ socket.on('connect', () => {
 
 socket.on('receiveMovies', movies => {
 	console.log(movies);
-	queue = movies;
-	askVote(queue.shift());
+	queue = movies; // assign moves to the queue
+	askVote(queue.shift()); // take the first element from the queue and ask for yes/no vote
 });
 
 socket.on('receiveRecommended', movies => {
 	console.log(movies);
 	if (movies.length >= 1) {
 		const list = document.getElementById('eid_recommended_list'); // get list element
-		movies.forEach(movie => {
+		movies.forEach(movie => { // for each of the movies
 			const li = document.createElement('li'); // create new list item
 			li.innerText = movie.title; // insert movie title
 			list.appendChild(li); // append list item onto list
 		});
-		showPage('pid_recommended'); // show page
+		showPage('pid_recommended'); // show recommendations screen
 	} else {
-		showPage('pid_loading');
+		showPage('pid_loading'); // show loading screen
 		socket.emit('requestMovies'); // ask for movies
 	}
 });
 
 socket.on('endSession', movie => {
 	if (movie) {
-		document.getElementById('app').style.backgroundImage = `linear-gradient(to bottom, rgba(0, 0, 0, 1.0), rgba(0, 0, 0, 0.5)), url("https://www.themoviedb.org/t/p/w1920_and_h800_multi_faces${movie.backdrop_path}")`;
-		document.getElementById('eid_end_last_movie_img').src = `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${movie.poster_path}`;
-		document.getElementById('eid_end_last_movie_title').innerText = movie.title;
-		document.getElementById('eid_end_last_movie_rating').innerText = `${movie.vote_average}/10`;
+		document.getElementById('app').style.backgroundImage = `linear-gradient(to bottom, rgba(0, 0, 0, 1.0), rgba(0, 0, 0, 0.5)), url("https://www.themoviedb.org/t/p/w1920_and_h800_multi_faces${movie.backdrop_path}")`; // set background image to movie backdrop
+		document.getElementById('eid_end_last_movie_img').src = `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${movie.poster_path}`; // set the movie poster image
+		document.getElementById('eid_end_last_movie_title').innerText = movie.title; // set the movie title
+		document.getElementById('eid_end_last_movie_rating').innerText = `${movie.vote_average}/10`; // movie rating
 		document.getElementById('eid_end_last_movie_description').innerText = movie.overview.substr(0, 300) + '...'; // trim overview to 300 characters
-		document.getElementById('eid_end_last_movie_watch_btn').href = `https://www.themoviedb.org/movie/${movie.id}/watch`;
-		showPage('pid_end_with_movie');
+		document.getElementById('eid_end_last_movie_watch_btn').href = `https://www.themoviedb.org/movie/${movie.id}/watch`; // link to JustWatch guide
+		showPage('pid_end_with_movie'); // show end screen
 	} else {
-		showPage('pid_end');
+		showPage('pid_end'); // show end screen
 	}
 });
 
@@ -56,7 +56,7 @@ function joinSession(id) {
 			if (response === true) {
 				// do something
 			} else {
-				const element = document.getElementById('eid_join_error');
+				const element = document.getElementById('eid_join_error'); // get the paragraph element
 				element.innerHTML = response; // output error
 			}
 		});
@@ -66,7 +66,7 @@ function joinSession(id) {
 }
 
 function startSession(event) {
-	showPage('pid_loading');
+	showPage('pid_loading'); // show loading screen
 	event.preventDefault(); // prevent form submission
 	const data = new FormData(event.target); // get the form data object
 	const genres = [];
@@ -78,10 +78,10 @@ function startSession(event) {
 }
 
 function askVote(movie) {
-	document.getElementById('app').style.backgroundImage = `linear-gradient(to bottom, rgba(0, 0, 0, 1.0), rgba(0, 0, 0, 0.5)), url("https://www.themoviedb.org/t/p/w1920_and_h800_multi_faces${movie.backdrop_path}")`;
-	document.getElementById('eid_vote_img').src = `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${movie.poster_path}`;
-	document.getElementById('eid_vote_title').innerText = movie.title;
-	document.getElementById('eid_vote_rating').innerText = `${movie.vote_average}/10`;
+	document.getElementById('app').style.backgroundImage = `linear-gradient(to bottom, rgba(0, 0, 0, 1.0), rgba(0, 0, 0, 0.5)), url("https://www.themoviedb.org/t/p/w1920_and_h800_multi_faces${movie.backdrop_path}")`; // set background image to movie backdrop
+	document.getElementById('eid_vote_img').src = `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${movie.poster_path}`; // set the movie poster image
+	document.getElementById('eid_vote_title').innerText = movie.title; // set the movie title
+	document.getElementById('eid_vote_rating').innerText = `${movie.vote_average}/10`; // movie rating
 	document.getElementById('eid_vote_description').innerText = movie.overview.substr(0, 300) + '...'; // trim overview to 300 characters
 	document.getElementById('eid_vote_btn_yes').onclick = () => voteYes(movie.id); // set vote yes function
 	document.getElementById('eid_vote_btn_no').onclick = () => voteNo(movie.id); // set vote no function
@@ -89,23 +89,23 @@ function askVote(movie) {
 }
 
 function voteYes(id) {
-	showPage('pid_loading');
+	showPage('pid_loading'); // show loading screen
 	console.log('Voted yes for', id);
 	socket.emit('vote', {
 		id,
 		vote: true
-	});
-	if (queue.length >= 1) askVote(queue.shift());
-	else socket.emit('getRecommended');
+	}); // submit vote to server
+	if (queue.length >= 1) askVote(queue.shift()); // if there's more movies in the queue,take the first element and ask for yes/no vote
+	else socket.emit('getRecommended'); // otherwise, request recommended movies
 }
 
 function voteNo(id) {
-	showPage('pid_loading');
+	showPage('pid_loading'); // show loading screen
 	console.log('Voted no for', id);
 	socket.emit('vote', {
 		id,
 		vote: false
-	});
-	if (queue.length >= 1) askVote(queue.shift());
-	else socket.emit('getRecommended');
+	}); // submit vote to server
+	if (queue.length >= 1) askVote(queue.shift()); // if there's more movies in the queue,take the first element and ask for yes/no vote
+	else socket.emit('getRecommended'); // otherwise, request recommended movies
 }
