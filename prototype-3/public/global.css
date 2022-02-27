@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+body {
+	margin: 0px;
+	background-color: #0D1117;
+	font-family: 'Open Sans', sans-serif;
+}
+
+noscript {
+	background-color: tomato;
+	font-weight: bold;
+}
+
+main {
+	display: block;
+	margin: 5em auto;
+	text-align: center;
+	max-width: 390px;
+	max-height: 844px;
+	border: solid 7px #1A222E;
+	height: 100vh;
+	background: rgb(2, 0, 36);
+	background-size: cover;
+	background-position: center top;
+	background-image: linear-gradient(320deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(0, 212, 255, 1) 100%);
+	color: white;
+	border-radius: 20px;
+	box-shadow: 10px 15px 20px black;
+	overflow-y: auto;
+}
+
+button, .button {
+	background-color: white;
+	color: black;
+	padding: .75em;
+	border-radius: 15px;
+	border: none;
+	cursor: pointer;
+}
+
+.page {
+	display: none;
+	margin: 20px;
+}
+
+#eid_vote_img {
+	width: 75%;
+	height: auto;
+	border-radius: 15px;
+	box-shadow: 0px 15px 75px black;
+}

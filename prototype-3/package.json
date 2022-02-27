@@ -1,0 +1,31 @@
+{
+  "name": "what2watch",
+  "version": "1.0.0",
+  "main": "server/index.js",
+  "scripts": {
+    "dev": "npx nodemon -w server/"
+  },
+  "author": "Isaac Saunders",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "fastify": "^3.22.1",
+    "fastify-cors": "^6.0.2",
+    "fastify-static": "^4.5.0",
+    "moviedb-promise": "^3.1.13",
+    "socket.io": "^4.3.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.9.0",
+    "nodemon": "^2.0.14"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eartharoid/what2watch.git"
+  },
+  "bugs": {
+    "url": "https://github.com/eartharoid/what2watch/issues"
+  },
+  "homepage": "https://github.com/eartharoid/what2watch#readme",
+  "description": ""
+}

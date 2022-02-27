@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+	<meta charset='utf-8'>
+	<meta name='viewport' content='width=device-width,initial-scale=1'>
+	<meta name='description' content='What2Watch' />
+	<meta name='theme-color' content='#00FFFF' />
+
+	<title>❔2️⃣⌚</title>
+
+	<link rel='icon' type='image/png' href='/favicon.png'>
+	<link rel='stylesheet' href='/global.css'>
+	<link rel='manifest' href='manifest.json'>
+
+	<script type='module' src='https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall'></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="/js/main.js"></script>
+</head>
+
+<body>
+	<noscript>
+		Please enable JavaScript.
+	</noscript>
+
+	<main id="app">
+		<div class="page" id="pid_loading">
+			<img src="/icons/128.png" style="margin:15px; border-radius:25px;" />
+		
+			<h1>Loading...</h1>
+			<p>Please be patient, this may take a few seconds.</p>
+		</div>
+
+		<div id="pid_home">
+			<img src="/icons/128.png" style="margin:15px; border-radius:25px;" />
+
+			<h2>Join or start a session?</h2>
+
+			<!-- <button onclick="showPage('pid_join');">Join a friend</button> -->
+			<br><br>
+			<button onclick="showPage('pid_start');">Start new session</button>
+		</div>
+
+		<div class="page" id="pid_join">
+			<input type="text" id="sessionId" placeholder="Session ID">
+			<button onclick="joinSession(document.getElementById('sessionId').value)">Join</button>
+			<p id="eid_join_error" style="color:tomato; font-weight: bold;"></p>
+		</div>
+
+		<div class="page" id="pid_start" action="#">
+			<h3>Genres</h3>
+			<p>
+				Which genres do you want to <strong>EXCLUDE</strong>?
+			</p>
+				<form onsubmit="startSession(event);">
+					<select name="genres" id="genres" multiple style="padding:1em; min-height:15em;">
+						<option value="28">Action</option>
+						<option value="12">Adventure</option>
+						<option value="16">Animation</option>
+						<option value="35">Comedy</option>
+						<option value="80">Crime</option>
+						<option value="99">Documentary</option>
+						<option value="18">Drama</option>
+						<option value="10751">Family</option>
+						<option value="14">Fantasy</option>
+						<option value="36">History</option>
+						<option value="27">Horror</option>
+						<option value="10402">Music</option>
+						<option value="9648">Mystery</option>
+						<option value="10749">Romance</option>
+						<option value="878">Science Fiction</option>
+						<option value="10770">TV Movie</option>
+						<option value="53">Thriller</option>
+						<option value="10752">War</option>
+						<option value="37">Western</option>
+					</select>
+					<br><br>
+					<button type="submit">Start</button>
+				</form>
+		</div>
+
+		<div class="page" id="pid_vote">
+			<img id="eid_vote_img" src=""/>
+			<h3 id="eid_vote_title"></h3>
+			<p id="eid_vote_rating"></p>
+			<p id="eid_vote_description"></p>
+			<p>Do you want to watch this movie?</p>
+			<button id="eid_vote_btn_yes">👍 Yes</button>
+			<button  id="eid_vote_btn_no">👎 No</button>
+		</div>
+
+		<div class="page" id="pid_recommended">
+			<h2>Recommendations</h2>
+			<p>Do you want to watch one of these?</p>
+			<ul id="eid_recommended_list"></ul>
+			<button onclick="socket.emit('endSession');">End session</button>
+			<button onclick="showPage('pid_loading');socket.emit('requestMovies');">Keep going</button>
+		</div>
+
+		<div class="page" id="pid_end">
+			<img src="/icons/128.png" style="margin:15px; border-radius:25px;" />
+			<h2>You've reached the end</h2>
+		</div>
+
+		<div class="page" id="pid_end_with_movie">
+			<img src="/icons/128.png" style="margin:15px; border-radius:25px;" />
+			<h2>There's only one movie left</h2>
+			<img id="eid_end_last_movie_img" src="" />
+			<h3 id="eid_end_last_movie_title"></h3>
+			<p id="eid_end_last_movie_rating"></p>
+			<p id="eid_end_last_movie_description"></p>
+			<a id="eid_end_last_movie_watch_btn" class="button">Watch</a>
+		</div>
+
+	</main>
+
+	<script>
+		if ('serviceWorker' in navigator) {
+			window.addEventListener('load', () => {
+				navigator.serviceWorker.register('/service-worker.js').then((reg) => {
+					console.log('Service worker registered.', reg);
+				});
+			});
+		}
+	</script>
+</body>
+
+</html>
